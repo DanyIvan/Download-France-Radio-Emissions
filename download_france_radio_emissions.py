@@ -63,3 +63,22 @@ def download_emissions_mp3(url_stream, show_title, save_path):
     name_mp3 = '{}/{}.mp3'.format(save_path,show_title)
     with open(name_mp3, 'wb') as f:
         f.write(r.content)
+
+def download_list(list_of_emissions):
+    '''
+    Download list of emissions
+        INPUT
+        list_of_emissions(list): list of names of emission from the dictionary of favorite emissions.
+    '''
+    save_path = 'mp3'
+    for emission in list_of_emissions:
+        url_stream = get_url_stream_show(favorite_emissions[emission])
+        download_emissions_mp3(url_stream, emission, save_path)
+
+if __name__ == '__main__':
+    #delete_folder_contents('mp3/')    
+    download_list(['allegretto',
+                   'chemins_philo',
+                   'methode_scientifique',
+                   'van_bethoveen',
+                   'open_jazz' ])
