@@ -49,3 +49,17 @@ def get_url_stream_show(url_show):
         return last_emission
     else:
         return penultimate_emission   
+
+def download_emissions_mp3(url_stream, show_title, save_path):
+    '''
+    This function downloads an mp3 from a url and saves it in a zip
+    INPUT:
+        url_stream(string): url of the mp3
+        show_title(string): title of show
+        save_path(string): path where the files are going to be saved
+    '''
+    url = url_stream
+    r = requests.get(url)
+    name_mp3 = '{}/{}.mp3'.format(save_path,show_title)
+    with open(name_mp3, 'wb') as f:
+        f.write(r.content)
