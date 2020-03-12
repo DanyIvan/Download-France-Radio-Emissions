@@ -43,12 +43,21 @@ def get_url_stream_show(url_show):
     }''' 
     r = requests.post(url, json = {'query': query_url_show}, headers = headers)
     dict_response =eval(r.text.replace('null', 'None'))
-    last_emission = (dict_response['data']['diffusionsOfShowByUrl']['edges'][0]['node']['podcastEpisode']['url'])
-    penultimate_emission = (dict_response['data']['diffusionsOfShowByUrl']['edges'][1]['node']['podcastEpisode']['url'])
+    if dict_response['data']['diffusionsOfShowByUrl']['edges'][0]['node']['podcastEpisode']:
+        last_emission = (dict_response['data']['diffusionsOfShowByUrl']['edges'][0]['node']['podcastEpisode']['url'])
+    else:
+        last_emission = None
+    if dict_response['data']['diffusionsOfShowByUrl']['edges'][1]['node']['podcastEpisode']:
+        penultimate_emission = (dict_response['data']['diffusionsOfShowByUrl']['edges'][1]['node']['podcastEpisode']['url'])
+    else:
+        penultimate_emission = None
+        
     if last_emission:
         return last_emission
+    elif penultimate_emission:
+        return penultimate_emission    
     else:
-        return penultimate_emission   
+        return None  
 
 def download_emissions_mp3(url_stream, show_title, save_path):
     '''
@@ -73,7 +82,10 @@ def download_list(list_of_emissions):
     save_path = 'mp3'
     for emission in list_of_emissions:
         url_stream = get_url_stream_show(favorite_emissions[emission])
-        download_emissions_mp3(url_stream, emission, save_path)
+        if url_stream:
+            download_emissions_mp3(url_stream, emission, save_path)
+        else:
+            print('There is not last or penultimate emission for {}'.format(emission))
 
 if __name__ == '__main__':
     #delete_folder_contents('mp3/')    
